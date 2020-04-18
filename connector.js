@@ -63,7 +63,6 @@ class ServiceNowConnector {
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
   }
 
-}
 
  
  /**
@@ -156,7 +155,7 @@ post(callback) {
   } else if (!validResponseRegex.test(response.statusCode)) {
     console.error('Bad response code.');
     callbackError = response;
-  } else if (isHibernating(response)) {
+  } else if (this.isHibernating(response)) {
     callbackError = 'Service Now instance is hibernating';
     console.error(callbackError);
   } else {
@@ -175,7 +174,10 @@ post(callback) {
   * @param {object} callOptions - Passed call options.
   * @param {string} callOptions.query - URL query string.
   * @param {string} callOptions.method - HTTP API request method.
-  * @param {iapCallback} callback - Callback a function.
+   *@param {string} callOptions.url - Your ServiceNow Developer instance's URL.
+   *@param {string} callOptions.username - Username to your ServiceNow instance.
+   *@param {string} callOptions.password - Your ServiceNow user's password.
+   *@param {string} callOptions.serviceNowTable - The table target of the ServiceNow table API.  * @param {iapCallback} callback - Callback a function.
   * @param {(object|string)} callback.data - The API's response. Will be an object if sunnyday path.
   *   Will be HTML text if hibernating instance.
   * @param {error} callback.error - The error property of callback.
@@ -183,10 +185,8 @@ post(callback) {
  sendRequest(callOptions, callback) {
    // Initialize return arguments for callback
    let uri;
-   if (callOptions.query)
-     uri = this.constructUri(callOptions.query);
-   else
-     uri = this.constructUri();
+   uri = this.constructUri(callOptions.query);
+
 
   
    /**
@@ -206,8 +206,9 @@ post(callback) {
   };  
 
    request(requestOptions, (error, response, body) => {
-     processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
+     this.processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
    });
  }
- 
+
+}
 module.exports = ServiceNowConnector;
