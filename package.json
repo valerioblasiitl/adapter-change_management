@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/valerioblasiitl/adapter-change_management#readme",
   "dependencies": {
+    "encrypt": "0.0.1",
     "request": "^2.88.2"
   }
 }
