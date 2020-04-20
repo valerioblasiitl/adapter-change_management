@@ -122,13 +122,8 @@ healthcheck(callback) {
          * for the callback's errorMessage parameter.
          */
         this.emitOffline();
-        log.error(`\nError returned from serviceNow healt check:\n${JSON.stringify(error)} for serviceNow adapter instance ${this.id}`);
+        log.error('Error returned from serviceNow healt check: ' + JSON.stringify(error) + 'for serviceNow adapter instance ' + this.id);
         errorMessage = error;
-        
-      } else if (this.connector.isHibernating(result)) {
-        this.emitOffline();
-        log.error(`\nError returned, serviceNow adapter instance ${this.id} is hibernating`);
-        errorMessage = "hibernating";
         
       } else {
         /**
@@ -141,10 +136,16 @@ healthcheck(callback) {
          * parameter as an argument for the callback function's
          * responseData parameter.
          */
-        this.emitOnline();
-        log.debug(`\nHealthy Status for serviceNow adapter instance ${this.id}`);
-        responseData = result;
-        
+        if (this.connector.isHibernating(result)) {
+            this.emitOffline();
+            log.error('Error returned, serviceNow adapter instance ' + this.id + ' is hibernating');
+            errorMessage = "hibernating";
+            
+        } else {
+            this.emitOnline();
+            log.debug('Healthy Status for serviceNow adapter instance ' + this.id);
+            responseData = result;
+        }
       }
       if (callback) callback(responseData, errorMessage);
     });
