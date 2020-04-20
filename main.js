@@ -121,11 +121,15 @@ healthcheck(callback) {
          * healthcheck(), execute it passing the error seen as an argument
          * for the callback's errorMessage parameter.
          */
-        this.emitStatus('OFFLINE');
+        this.emitOffline();
         log.error(`\nError returned from serviceNow healt check:\n${JSON.stringify(error)} for serviceNow adapter instance ${this.id}`);
         errorMessage = error;
         
-
+      } else if (this.connector.isHibernating(result)) {
+        this.emitOffline();
+        log.error(`\nError returned, serviceNow adapter instance ${this.id} is hibernating`);
+        errorMessage = "hibernating";
+        
       } else {
         /**
          * Write this block.
@@ -137,7 +141,7 @@ healthcheck(callback) {
          * parameter as an argument for the callback function's
          * responseData parameter.
          */
-        this.emitStatus('ONLINE');
+        this.emitOnline();
         log.debug(`\nHealthy Status for serviceNow adapter instance ${this.id}`);
         responseData = result;
         
@@ -146,31 +150,6 @@ healthcheck(callback) {
     });
    }
 
-
-
-
-
-
-
-
-
-
-
-  /**
-   * @memberof ServiceNowAdapter
-   * @method healthcheck
-   * @summary Check ServiceNow Health
-   * @description Verifies external system is available and healthy.
-   *   Calls method emitOnline if external system is available.
-   *
-   * @param {ServiceNowAdapter~requestCallback} [callback] - The optional callback
-   *   that handles the response.
-   */
-  healthcheck(callback) {
-    // We will build this method in a later lab. For now, it will emulate
-    // a healthy integration by emmitting ONLINE.
-    this.emitOnline();
-  }
 
   /**
    * @memberof ServiceNowAdapter
