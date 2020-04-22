@@ -138,7 +138,7 @@ healthcheck(callback) {
          */
         if (this.connector.isHibernating(result)) {
             this.emitOffline();
-            log.error('Error returned, serviceNow adapter instance ' + this.id + ' is hibernating ');
+            log.error('Error returned, serviceNow adapter instance ' + this.id + ' is hibernating');
             errorMessage = "hibernating";
             
         } else {
@@ -206,26 +206,7 @@ healthcheck(callback) {
      * get() takes a callback function.
      */
     this.connector.get((data, error) => callback(data, error));
-    let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
 
-
-    if (typeof data === 'object' && data.body) {
-        let body = JSON.parse(data.body);
-        let ticketArray = body.result;
-        let returnArray = [];
-
-        ticketArray.forEach((objectInTicketArray, index) => {
-            let tempObj = {};
-            propArray.forEach((prop, index) => {
-                if (objectInTicketArray.hasOwnProperty(prop.old)) {
-                    tempObj[prop.new] = objectInTicketArray[prop.old];
-                }
-            });
-            returnArray.push(tempObj);
-        });
-
-        return returnArray;
-    }    
   }
 
   /**
@@ -245,25 +226,6 @@ healthcheck(callback) {
      * post() takes a callback function.
      */
     this.connector.post((data, error) => callback(data, error));
-    let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
-
-
-    if (typeof data === 'object' && data.body) {
-        let body = JSON.parse(data.body);
-        let ticket = body.result;
-        let returnObj = {};
-        
-        propArray.forEach((prop, index) => {
-            if (ticket.hasOwnProperty(prop.old)) {
-                //console.log(objectInTicketArray[prop.old]);
-                returnObj[prop.new] = ticket[prop.old];
-                
-            }
-        });
-
-
-        return returnObj;
-    } 
   }
 }
 
