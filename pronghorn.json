@@ -15,10 +15,11 @@
       "description": "Get the first ServiceNow change management ticket.",
       "input": [],
       "output": {
-        "name": "changeTicket",
+        "name": "changeTickets",
         "type": "array",
         "description": "An array of objects. Each element is a change management ticket document.",
         "schema": {
+          "type": "array",
           "title": "changeTicket",
           "$ref": "changeRequest#/definitions/changeTicket"
         }
@@ -40,6 +41,7 @@
         "type": "object",
         "description": "An object with data of the ServiceNow created ticket.",
         "schema": {
+          "type": "object",
           "title": "changeTicket",
           "$ref": "changeRequest#/definitions/changeTicket"
         }
