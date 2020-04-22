@@ -13,7 +13,13 @@
       "name": "getRecord",
       "summary": "Get First Change Ticket",
       "description": "Get the first ServiceNow change management ticket.",
-      "input": [],
+      "input": [
+        {
+            "type": "string",
+            "name": "numOfTickets",
+            "description": "Number of tickets to get. Leave empty for all, Insert a ticket ID to get specific Ticket"
+        }          
+      ],
       "output": {
         "name": "changeTickets",
         "type": "array",
