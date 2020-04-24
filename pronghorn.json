@@ -11,8 +11,8 @@
   "methods": [
     {
       "name": "getRecord",
-      "summary": "Get First Change Ticket",
-      "description": "Get the first ServiceNow change management ticket.",
+      "summary": "Get Change Tickets",
+      "description": "Get N tickets or a specified ServiceNow change management ticket.",
       "input": [
         {
             "type": "string",

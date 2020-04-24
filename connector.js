@@ -59,8 +59,10 @@ class ServiceNowConnector {
    */
   get(numOfTickets, callback) {
     let getCallOptions = this.options;
-    let parsedNumOfTickets = Number(numOfTickets);
     getCallOptions.method = 'GET';
+    
+    if (numOfTickets == 'forHealtChecking') numOfTickets = '1';
+    let parsedNumOfTickets = Number(numOfTickets);
     
     if (parsedNumOfTickets) {
         getCallOptions.query = 'sysparm_limit=' + parsedNumOfTickets;
@@ -68,6 +70,7 @@ class ServiceNowConnector {
         getCallOptions.query = 'sysparm_query=number%3D' + numOfTickets.trim();
     } else {
         getCallOptions.query = '';
+        
     }
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
   }

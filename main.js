@@ -98,7 +98,7 @@ class ServiceNowAdapter extends EventEmitter {
  *   that handles the response.
  */
 healthcheck(callback) {
-    this.getRecord("1", (result, error) => {
+    this.getRecord("forHealtChecking", (result, error) => {
       /**
        * For this lab, complete the if else conditional
        * statements that check if an error exists
@@ -190,6 +190,7 @@ healthcheck(callback) {
     this.emit(status, { id: this.id });
   }
 
+
   /**
    * @memberof ServiceNowAdapter
    * @method getRecord
@@ -206,27 +207,35 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-    this.connector.get(numOfTickets, (data, error) => callback(data, error));
-    let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
 
+    if (numOfTickets == 'forHealtChecking'){
+        this.connector.get(numOfTickets, (data, error) => callback(data, error));
 
-    if (typeof data === 'object' && data.body) {
-        let body = JSON.parse(data.body);
-        let ticketArray = body.result;
-        let returnArray = [];
+    } else {
+        this.connector.get(numOfTickets, (data, error) => {
+            let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
+            let returnArray = [];
+            
+            if (typeof data === 'object' && data.body) {
+                let body = JSON.parse(data.body);
+                let ticketArray = body.result;
 
-        ticketArray.forEach((objectInTicketArray, index) => {
-            let tempObj = {};
-            propArray.forEach((prop, index) => {
-                if (objectInTicketArray.hasOwnProperty(prop.old)) {
-                    tempObj[prop.new] = objectInTicketArray[prop.old];
-                }
-            });
-            returnArray.push(tempObj);
+                ticketArray.forEach((objectInTicketArray, index) => {
+                    let tempObj = {};
+                    propArray.forEach((prop, index) => {
+                        if (objectInTicketArray.hasOwnProperty(prop.old)) {
+                            tempObj[prop.new] = objectInTicketArray[prop.old];
+                        }
+                    });
+                    returnArray.push(tempObj);
+                });
+
+            } 
+            return callback(returnArray);
         });
-
-        return "test output";
-    }    
+    }
+    //this.connector.get(numOfTickets, (data, error) => callback(data, error));
+   
   }
 
   /**
@@ -245,26 +254,27 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-    this.connector.post((data, error) => callback(data, error));
-    let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
-
-
-    if (typeof data === 'object' && data.body) {
-        let body = JSON.parse(data.body);
-        let ticket = body.result;
+    this.connector.post((data, error) => {
+        let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
         let returnObj = {};
-        
-        propArray.forEach((prop, index) => {
-            if (ticket.hasOwnProperty(prop.old)) {
-                //console.log(objectInTicketArray[prop.old]);
-                returnObj[prop.new] = ticket[prop.old];
+
+        if (typeof data === 'object' && data.body) {
+            let body = JSON.parse(data.body);
+            let ticket = body.result;
                 
-            }
-        });
+            propArray.forEach((prop, index) => {
+                if (ticket.hasOwnProperty(prop.old)) {
+                    //console.log(objectInTicketArray[prop.old]);
+                    returnObj[prop.new] = ticket[prop.old];
+                    
+                }
+            });
 
+        } 
+        return callback(returnObj);
 
-        return returnObj;
-    } 
+    });
+
   }
 }
 
