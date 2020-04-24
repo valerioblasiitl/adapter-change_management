@@ -51,15 +51,24 @@ class ServiceNowConnector {
    *   should have a parameter for passing limit, sort, and filter options.
    *   We are ignoring that for this course and hardcoding a limit of one.
    *
+   * @param {string} numOfTickets - number og tickets to get. Leave empty or put 0 to get all tickets, put the number of a ticket to get specific one
    * @param {iapCallback} callback - Callback a function.
    * @param {(object|string)} callback.data - The API's response. Will be an object if sunnyday path.
    *   Will be HTML text if hibernating instance.
    * @param {error} callback.error - The error property of callback.
    */
-  get(callback) {
+  get(numOfTickets, callback) {
     let getCallOptions = this.options;
+    let parsedNumOfTickets = Number(numOfTickets);
     getCallOptions.method = 'GET';
-    getCallOptions.query = 'sysparm_limit=1';
+    
+    if (parsedNumOfTickets) {
+        getCallOptions.query = 'sysparm_limit=' + parsedNumOfTickets;
+    } else if (isNaN(parsedNumOfTickets)) {
+        getCallOptions.query = 'sysparm_query=number%3D' + numOfTickets.trim();
+    } else {
+        getCallOptions.query = '';
+    }
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
   }
 

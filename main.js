@@ -98,7 +98,7 @@ class ServiceNowAdapter extends EventEmitter {
  *   that handles the response.
  */
 healthcheck(callback) {
-    this.getRecord((result, error) => {
+    this.getRecord("1", (result, error) => {
       /**
        * For this lab, complete the if else conditional
        * statements that check if an error exists
@@ -183,6 +183,7 @@ healthcheck(callback) {
    * @description Calls inherited emit method. IAP requires the event
    *   and an object identifying the adapter instance.
    *
+   * @param {string} numOfTickets - number og tickets to get. Leave empty or put 0 to get all tickets, put the number of a ticket to get specific one
    * @param {string} status - The event to emit.
    */
   emitStatus(status) {
@@ -198,14 +199,14 @@ healthcheck(callback) {
    * @param {ServiceNowAdapter~requestCallback} callback - The callback that
    *   handles the response.
    */
-  getRecord(callback) {
+  getRecord(numOfTickets, callback) {
     /**
      * Write the body for this function.
      * The function is a wrapper for this.connector's get() method.
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-    this.connector.get((data, error) => callback(data, error));
+    this.connector.get(numOfTickets, (data, error) => callback(data, error));
     let propArray = [{'old':'number','new':'change_ticket_number'}, {'old':'active','new':'active'}, {'old':'priority','new':'priority'}, {'old':'description','new':'description'}, {'old':'work_start','new':'work_start'}, {'old':'work_end','new':'work_end'}, {'old':'sys_id','new':'change_ticket_key'}];
 
 
@@ -224,7 +225,7 @@ healthcheck(callback) {
             returnArray.push(tempObj);
         });
 
-        return returnArray;
+        return "test output";
     }    
   }
 
