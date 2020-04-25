@@ -197,6 +197,7 @@ healthcheck(callback) {
    * @summary Get ServiceNow Record
    * @description Retrieves a record from ServiceNow.
    *
+   * @param {string} numOfTickets - Number of tickets to get. Leave empty or put 0 to get all tickets, put the number of a ticket to get specific one
    * @param {ServiceNowAdapter~requestCallback} callback - The callback that
    *   handles the response.
    */
@@ -233,9 +234,7 @@ healthcheck(callback) {
             } 
             return callback(returnArray);
         });
-    }
-    //this.connector.get(numOfTickets, (data, error) => callback(data, error));
-   
+    }   
   }
 
   /**
@@ -264,7 +263,6 @@ healthcheck(callback) {
                 
             propArray.forEach((prop, index) => {
                 if (ticket.hasOwnProperty(prop.old)) {
-                    //console.log(objectInTicketArray[prop.old]);
                     returnObj[prop.new] = ticket[prop.old];
                     
                 }

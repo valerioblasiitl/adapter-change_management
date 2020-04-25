@@ -51,7 +51,7 @@ class ServiceNowConnector {
    *   should have a parameter for passing limit, sort, and filter options.
    *   We are ignoring that for this course and hardcoding a limit of one.
    *
-   * @param {string} numOfTickets - number og tickets to get. Leave empty or put 0 to get all tickets, put the number of a ticket to get specific one
+   * @param {string} numOfTickets - Number of tickets to get. Leave empty or put 0 to get all tickets, put the number of a ticket to get specific one
    * @param {iapCallback} callback - Callback a function.
    * @param {(object|string)} callback.data - The API's response. Will be an object if sunnyday path.
    *   Will be HTML text if hibernating instance.
